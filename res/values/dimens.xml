@@ -4,4 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    
+    <dimen name="appitem_minheight">72dp</dimen>
+    <dimen name="image_width_large">64dp</dimen>
+    <dimen name="image_width_small">32dp</dimen>
 </resources>

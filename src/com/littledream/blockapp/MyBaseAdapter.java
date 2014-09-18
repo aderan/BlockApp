@@ -16,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,7 +50,9 @@ public class MyBaseAdapter extends BaseAdapter {
 	
 	
 	public class ViewHolder{
-		ImageTextButton button;
+		ImageView img;
+		TextView appname;
+		CheckBox choose;
 	}
 
 	@Override
@@ -56,31 +61,43 @@ public class MyBaseAdapter extends BaseAdapter {
 		ViewHolder viewHolder = null;
 		if(convertView==null){
 			Log.d("MyBaseAdapter", "新建convertView,position="+position);
-			convertView = new ImageTextButton(mContext);
+			convertView = View.inflate(mContext,R.layout.app_item, null);
 			viewHolder = new ViewHolder();
-			viewHolder.button = (ImageTextButton)convertView;
+			viewHolder.img = (ImageView)convertView.findViewById(R.id.appitem_img);
+			viewHolder.appname = (TextView)convertView.findViewById(R.id.appitem_name);
+			viewHolder.choose = (CheckBox)convertView.findViewById(R.id.appitem_choose);
 			convertView.setTag(viewHolder);
 		}else{
 			viewHolder = (ViewHolder)convertView.getTag();
 			Log.d("MyBaseAdapter", "旧的convertView,position="+position);
 		}
 		
-		viewHolder.button.setText(appInfo.appName);
-		viewHolder.button.setIcon(appInfo.appIcon);
-		viewHolder.button.setBlock(LocalSetting.getBoolean(appInfo.packageName, false));
+		viewHolder.appname.setText(appInfo.appName);
+		viewHolder.img.setImageDrawable(appInfo.appIcon);
+		viewHolder.choose.setChecked(LocalSetting.getBoolean(appInfo.packageName, false));
 		
-		//对ListView中button配置OnClick事件
-		viewHolder.button.setOnClickListener(new OnClickListener(){
+		viewHolder.choose.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
 			@Override
-			public void onClick(View v) {
-				Toast.makeText(mContext, 
-						"点击了"+appInfo.appName, 
-						Toast.LENGTH_SHORT).show();
-				ImageTextButton btn = (ImageTextButton) v;
-				btn.setBlock(!btn.isBlock());
-				LocalSetting.setBoolean(appInfo.packageName, btn.isBlock());
-			}
-		});
+            public void onCheckedChanged(CompoundButton buttonView,
+                    boolean isChecked) {
+	            // TODO Auto-generated method stub
+				LocalSetting.setBoolean(appInfo.packageName, isChecked);
+            }});
+		
+//		//对ListView中button配置OnClick事件
+//		viewHolder.choose.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View v) {
+////				Toast.makeText(mContext, 
+////						"点击了"+appInfo.appName, 
+////						Toast.LENGTH_SHORT).show();
+//				//ShowChangeOnClick
+//				CheckBox cbox = (CheckBox)v;
+//				cbox.setChecked(!cbox.isChecked());
+//				LocalSetting.setBoolean(appInfo.packageName, cbox.isChecked());
+//			}
+//		});
 		
 		//对ListView中的每一行信息配置OnLongClick事件
 		convertView.setOnLongClickListener(new OnLongClickListener(){
