@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.littledream.blockapp"
+    package="com.littledream.yoblock"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -28,8 +28,9 @@
         <service android:name=".BlockAppService" />
 
         <activity
-            android:name=".HelloActivity"
-            android:label="@string/title_activity_hello" >
+            android:name=".NotifyActivity"
+            android:label="@string/title_activity_notify"
+            android:launchMode="singleTask" >
         </activity>
     </application>
 

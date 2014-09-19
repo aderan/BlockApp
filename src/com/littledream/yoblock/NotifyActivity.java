@@ -1,16 +1,21 @@
-package com.littledream.blockapp;
+package com.littledream.yoblock;
 
+import com.littledream.yoblock.R;
+
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class HelloActivity extends ActionBarActivity {
+public class NotifyActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_hello);
+		setContentView(R.layout.activity_notify);
+		ActionBar actionBar = getSupportActionBar(); 
+		actionBar.hide();
 	}
 
 	@Override

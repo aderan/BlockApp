@@ -1,4 +1,4 @@
-package com.littledream.blockapp;
+package com.littledream.yoblock;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import com.littledream.utils.AppsInfo;
 import com.littledream.utils.AppsInfo.AppInfoItem;
 import com.littledream.utils.LocalSetting;
 import com.littledream.view.ImageTextButton;
+import com.littledream.yoblock.R;
 
 import android.content.Context;
 import android.util.Log;
@@ -74,16 +75,19 @@ public class MyBaseAdapter extends BaseAdapter {
 		
 		viewHolder.appname.setText(appInfo.appName);
 		viewHolder.img.setImageDrawable(appInfo.appIcon);
-		viewHolder.choose.setChecked(LocalSetting.getBoolean(appInfo.packageName, false));
 		
+		//解决checkBox错乱问题
 		viewHolder.choose.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
 			@Override
             public void onCheckedChanged(CompoundButton buttonView,
                     boolean isChecked) {
 	            // TODO Auto-generated method stub
+				Log.d("Aderan","isChecked:"+isChecked + " appInfo.packageName:"+appInfo.packageName);
 				LocalSetting.setBoolean(appInfo.packageName, isChecked);
             }});
+		
+		viewHolder.choose.setChecked(LocalSetting.getBoolean(appInfo.packageName, false));
 		
 //		//对ListView中button配置OnClick事件
 //		viewHolder.choose.setOnClickListener(new OnClickListener(){

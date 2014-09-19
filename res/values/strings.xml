@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Block App</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_hello">HelloActivity</string>
+    <string name="app_name">YoBlock</string>
+    <string name="keep_mind">Do You Remember Your Words</string>
+    <string name="action_settings">Setting</string>
+    <string name="title_activity_notify">Notify</string>
 
 </resources>

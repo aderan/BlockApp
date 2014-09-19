@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">幽禁</string>
+    <string name="keep_mind">你是否还记得，你曾经的承诺</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_notify">提醒</string>
+
+</resources>

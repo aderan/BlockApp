@@ -1,4 +1,4 @@
-package com.littledream.blockapp;
+package com.littledream.yoblock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class BlockAppService extends Service {
 		List<RunningTaskInfo>  tasksInfo = am.getRunningTasks(1);    
 		if(tasksInfo.size() > 0){    
 			//应用程序位于堆栈的顶层
-			Log.d("Aderan", "PackageName:"+packageName + " getPackageName:"+tasksInfo.get(0).topActivity.getPackageName());
+			//Log.d("Aderan", "PackageName:"+packageName + " getPackageName:"+tasksInfo.get(0).topActivity.getPackageName());
 			if(packageName.equals(tasksInfo.get(0).topActivity.getPackageName())){    
 				return true;    
 			}    
@@ -71,7 +71,7 @@ public class BlockAppService extends Service {
 						{
 							if (isTopActivity(appinfo.packageName) && LocalSetting.getBoolean(appinfo.packageName, false))
 							{
-								Intent i = new Intent(BlockAppService.this, HelloActivity.class);
+								Intent i = new Intent(BlockAppService.this, NotifyActivity.class);
 								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 								startActivity(i);
 							}
@@ -86,8 +86,10 @@ public class BlockAppService extends Service {
 
 		};
 		mThread.start();
-		return super.onStartCommand(intent, flags, startId);
-    }
+		super.onStartCommand(intent, flags, startId);
+		//修复从任务列表移除之后service重启的问题
+		return START_NOT_STICKY;
+    } 
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -110,6 +112,7 @@ public class BlockAppService extends Service {
 	@Override
     public void onDestroy() {
 	    // TODO Auto-generated method stub
+		mFlag = false;
 	    super.onDestroy();
     }
 }

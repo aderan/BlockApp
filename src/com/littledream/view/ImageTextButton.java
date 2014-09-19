@@ -1,6 +1,6 @@
 package com.littledream.view;
 
-import com.littledream.blockapp.R;
+import com.littledream.yoblock.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

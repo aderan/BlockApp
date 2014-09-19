@@ -1,9 +1,10 @@
-package com.littledream.blockapp;
+package com.littledream.yoblock;
 
 import java.util.List;
 
 import com.littledream.utils.AppsInfo;
 import com.littledream.utils.AppsInfo.AppInfoItem;
+import com.littledream.yoblock.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
