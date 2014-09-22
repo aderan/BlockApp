@@ -4,6 +4,7 @@ import com.littledream.yoblock.R;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,5 +36,15 @@ public class NotifyActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// 这里处理逻辑代码，大家注意：该方法仅适用于2.0或更新版的sdk
+		Intent i = new Intent(this, BlockAppActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
+		this.finish();
+		return;
 	}
 }

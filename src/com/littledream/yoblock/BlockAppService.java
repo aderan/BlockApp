@@ -59,7 +59,7 @@ public class BlockAppService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 	    // TODO 实现BroadcastReceiver，接受启动信息，或者监听运行状态，启动相应的Activity
 		Log.d(LOGTAG , "start onStart~~~");
-		final ArrayList<AppInfoItem> appList = AppsInfo.getInstance(null).getAppList();
+		final ArrayList<AppInfoItem> appList = AppsInfo.getInstance(this).getAppList();
 		
 		mThread = new Thread(){
 			@Override
@@ -69,14 +69,16 @@ public class BlockAppService extends Service {
 					try {
 						for (AppInfoItem appinfo: appList)
 						{
-							if (isTopActivity(appinfo.packageName) && LocalSetting.getBoolean(appinfo.packageName, false))
+							if (isTopActivity(appinfo.packageName) 
+									&& LocalSetting.getBoolean("yoblock_enable", true)
+									&& LocalSetting.getBoolean(appinfo.packageName, false))
 							{
 								Intent i = new Intent(BlockAppService.this, NotifyActivity.class);
 								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 								startActivity(i);
 							}
 						}
-						sleep(1000);
+						sleep(MainConfig.Interval_CheckTop);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -86,14 +88,14 @@ public class BlockAppService extends Service {
 
 		};
 		mThread.start();
-		super.onStartCommand(intent, flags, startId);
 		//修复从任务列表移除之后service重启的问题
-		return START_NOT_STICKY;
+		return LocalSetting.getBoolean("superbg_enable", false)?super.onStartCommand(intent, flags, startId):START_NOT_STICKY;
     } 
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
+		Log.d(LOGTAG , "start onBind~~~");
 		return null;
 	}
 	
@@ -112,6 +114,7 @@ public class BlockAppService extends Service {
 	@Override
     public void onDestroy() {
 	    // TODO Auto-generated method stub
+		Log.d(LOGTAG , "start onDestroy~~~");
 		mFlag = false;
 	    super.onDestroy();
     }

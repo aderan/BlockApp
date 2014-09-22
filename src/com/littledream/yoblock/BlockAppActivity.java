@@ -50,7 +50,8 @@ public class BlockAppActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			return true;
+			Intent i = new Intent(this, SettingActivity.class);
+			startActivity(i);
 		}
 		return super.onOptionsItemSelected(item);
 	}

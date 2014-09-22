@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -19,16 +20,16 @@ public class AppsInfo {
 
 	static AppsInfo appsInfo;
 	
-	public static AppsInfo getInstance(Activity activity)
+	public static AppsInfo getInstance(Context context)
 	{
 		if (appsInfo == null)
-			appsInfo = new AppsInfo(activity);
+			appsInfo = new AppsInfo(context);
 		return appsInfo;
 	}
 	
-	private AppsInfo(Activity activity)
+	private AppsInfo(Context context)
 	{
-		PackageManager pm = activity.getPackageManager();
+		PackageManager pm = context.getPackageManager();
 		List<PackageInfo> packages = pm.getInstalledPackages(0);
 		for(int i=0;i<packages.size();i++)
 		{
