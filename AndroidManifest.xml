@@ -13,7 +13,7 @@
     <application
         android:name=".BlockAppApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:launchMode="singleTask"
         android:theme="@style/AppTheme" >

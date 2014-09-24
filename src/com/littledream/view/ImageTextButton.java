@@ -29,7 +29,7 @@ public class ImageTextButton extends Button {
         this.setClickable(true);
         this.setGravity(GRAVITY_LEFT);
         this.setHeight(72);
-        resourceId = R.drawable.ic_launcher;
+        resourceId = R.drawable.icon;
         bitmap = BitmapFactory.decodeResource(getResources(), resourceId);
     }
     
