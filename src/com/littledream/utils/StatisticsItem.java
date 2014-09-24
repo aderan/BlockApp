@@ -6,6 +6,8 @@ public class StatisticsItem {
 	private int useTime;
 	private int blockTimes;
 	
+	private int hashKey;
+	
 	public StatisticsItem(String packageName,String date)
 	{
 		this(packageName, date, 0, 0);
@@ -17,6 +19,12 @@ public class StatisticsItem {
 		this.date = date;
 		this.useTime = useTime;
 		this.blockTimes = blockTimes;
+		this.hashKey = HashHelper.BKDRHash(packageName + date);
+	}
+	
+	public int getHashKey()
+	{
+		return hashKey;
 	}
 	
 	public void addUseTime(int seconds)
@@ -44,4 +52,12 @@ public class StatisticsItem {
 	public int getBlockTimes() {
 		return blockTimes;
 	}
+
+	@Override
+	public String toString() {
+		return "StatisticsItem [packageName=" + packageName + ", date=" + date
+				+ ", useTime=" + useTime + ", blockTimes=" + blockTimes
+				+ ", hashKey=" + hashKey + "]";
+	}
+	
 }

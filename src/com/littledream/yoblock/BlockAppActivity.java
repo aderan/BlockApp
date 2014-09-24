@@ -1,9 +1,12 @@
 package com.littledream.yoblock;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.littledream.utils.AppsInfo;
 import com.littledream.utils.AppsInfo.AppInfoItem;
+import com.littledream.utils.DebugHelper;
 import com.littledream.yoblock.R;
 
 import android.support.v7.app.ActionBarActivity;
@@ -22,15 +25,27 @@ public class BlockAppActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		DebugHelper.timerStart();
 		AppsInfo appsinfo = AppsInfo.getInstance(this);
+		DebugHelper.showCostTime("step 1");
 		List applist = appsinfo.getAppList();
-		BaseAdapter adapter = new MyBaseAdapter(this, applist);
+		Collections.sort(applist, new Comparator<AppInfoItem>(){
 
+			@Override
+			public int compare(AppInfoItem arg0, AppInfoItem arg1) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+		});
+		BaseAdapter adapter = new MyBaseAdapter(this, applist);
+		DebugHelper.showCostTime("step 2");
 		mListView = new ListView(this);
 		mListView.setAdapter(adapter);
+		DebugHelper.showCostTime("step 3");
 		setContentView(mListView);
-		
+		DebugHelper.showCostTime("step 4");
 		//启用service
 		Intent intent = new Intent(this,BlockAppService.class);  
 		startService(intent);

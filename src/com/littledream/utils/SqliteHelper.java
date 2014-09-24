@@ -2,7 +2,9 @@ package com.littledream.utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -63,18 +65,16 @@ public class SqliteHelper extends SQLiteOpenHelper{
 		}
 	}
 	
+	//思考使用Hash的方式,无法评估效果，先使用List，将HashCode内置于StatisticsItem，便于查找
 	public List<StatisticsItem> getStatistics()
 	{
-		List<StatisticsItem> list = null;
 		SQLiteDatabase db = this.getReadableDatabase();
-		Date date = new Date();
-		String dateStr = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
-		Log.d("Aderan", "dateStr:"+dateStr);
+		
+		String dateStr = Tools.getDateStrNow();
 		Cursor cursor = db.rawQuery("select * from statistics where date=?", new String[]{dateStr});
+		List<StatisticsItem> list = new ArrayList<StatisticsItem>();
 		while (cursor.moveToNext())
 		{
-			if (list == null)
-				list = new ArrayList<StatisticsItem>();
 			Log.d("Aderan",
 				"packageName:"+cursor.getString(cursor.getColumnIndex("packageName"))
 				+ " date:"+cursor.getString(cursor.getColumnIndex("date"))

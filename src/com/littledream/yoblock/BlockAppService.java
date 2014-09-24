@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.littledream.utils.AppsInfo;
+import com.littledream.utils.HashHelper;
+import com.littledream.utils.SqliteHelper;
+import com.littledream.utils.Tools;
 import com.littledream.utils.AppsInfo.AppInfoItem;
 import com.littledream.utils.LocalSetting;
+import com.littledream.utils.StatisticsItem;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -61,16 +65,62 @@ public class BlockAppService extends Service {
 		Log.d(LOGTAG , "start onStart~~~");
 		final ArrayList<AppInfoItem> appList = AppsInfo.getInstance(this).getAppList();
 		
+		SqliteHelper dbHelper = SqliteHelper.getInstance(this);
+		final List<StatisticsItem> statisticsItems =  dbHelper.getStatistics();
+		
 		mThread = new Thread(){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				long timer = System.currentTimeMillis();
 				while (mFlag){
 					try {
+						if (System.currentTimeMillis()-timer > MainConfig.Interval_SaveData)
+						{
+							Log.d(LOGTAG,"保存数据");
+							for(StatisticsItem item:statisticsItems){
+								Log.d(LOGTAG,item.toString());
+							}
+							timer = System.currentTimeMillis();
+						}
+						
 						for (AppInfoItem appinfo: appList)
 						{
-							if (isTopActivity(appinfo.packageName) 
-									&& LocalSetting.getBoolean("yoblock_enable", true)
+							boolean isTop = isTopActivity(appinfo.packageName);
+							//统计相关代码
+							if (isTop)
+							{
+								int hashKey = HashHelper.BKDRHash(appinfo.packageName + Tools.getDateStrNow());
+								boolean updated = false;
+								for (StatisticsItem item: statisticsItems)
+								{
+									if (item.getHashKey() == hashKey)
+									{
+										if (!item.getPackageName().equals(appinfo.packageName))
+										{
+											Log.w(LOGTAG,"HashKey相同："   +
+													item.getPackageName() +
+													"vs" +
+													appinfo.packageName);
+										}
+										//item.addBlockTimes();
+										item.addUseTime(MainConfig.Interval_CheckTop);
+										updated = true;
+									}
+								}
+								//未在列表内，添加入列表
+								if (!updated)
+								{
+									Log.d(LOGTAG,"新建统计项，加入列表");
+									StatisticsItem item = new StatisticsItem(
+											appinfo.packageName,
+											Tools.getDateStrNow(),
+											MainConfig.Interval_CheckTop, 0);
+									statisticsItems.add(item);
+								}
+							}
+							
+							if (isTop && LocalSetting.getBoolean("yoblock_enable", true)
 									&& LocalSetting.getBoolean(appinfo.packageName, false))
 							{
 								Intent i = new Intent(BlockAppService.this, NotifyActivity.class);
