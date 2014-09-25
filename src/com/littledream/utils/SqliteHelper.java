@@ -56,7 +56,18 @@ public class SqliteHelper extends SQLiteOpenHelper{
 				values.put("date", item.getDate());
 				values.put("useTime", item.getUseTime());
 				values.put("blockTimes", item.getBlockTimes());
-				db.update("statistics", values, "packageName = ? and date = ?", new String[]{item.getPackageName(),item.getDate()});
+				//可能能更简单一点：
+				Cursor cursor = db.rawQuery("select * from statistics where packageName = ? and date=?", new String[]{item.getPackageName(),item.getDate()});
+				if (!cursor.moveToFirst())
+				{
+					db.insertOrThrow("statistics", null, values); 
+					Log.d("Aderan","插入:"+item.toString());
+				}
+				else
+				{
+					int ret = db.update("statistics", values, "packageName = ? and date = ?", new String[]{item.getPackageName(),item.getDate()});
+					Log.d("Aderan","Effect Rows:"+ret);
+				}
 			}
 			db.setTransactionSuccessful();
 		}finally

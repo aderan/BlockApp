@@ -65,7 +65,7 @@ public class BlockAppService extends Service {
 		Log.d(LOGTAG , "start onStart~~~");
 		final ArrayList<AppInfoItem> appList = AppsInfo.getInstance(this).getAppList();
 		
-		SqliteHelper dbHelper = SqliteHelper.getInstance(this);
+		final SqliteHelper dbHelper = SqliteHelper.getInstance(this);
 		final List<StatisticsItem> statisticsItems =  dbHelper.getStatistics();
 		
 		mThread = new Thread(){
@@ -81,6 +81,7 @@ public class BlockAppService extends Service {
 							for(StatisticsItem item:statisticsItems){
 								Log.d(LOGTAG,item.toString());
 							}
+							dbHelper.updateStatistics(statisticsItems);
 							timer = System.currentTimeMillis();
 						}
 						
@@ -92,6 +93,7 @@ public class BlockAppService extends Service {
 							{
 								int hashKey = HashHelper.BKDRHash(appinfo.packageName + Tools.getDateStrNow());
 								boolean updated = false;
+								StatisticsItem tmpItem = null;
 								for (StatisticsItem item: statisticsItems)
 								{
 									if (item.getHashKey() == hashKey)
@@ -105,6 +107,7 @@ public class BlockAppService extends Service {
 										}
 										//item.addBlockTimes();
 										item.addUseTime(MainConfig.Interval_CheckTop);
+										tmpItem = item;
 										updated = true;
 									}
 								}
@@ -117,15 +120,17 @@ public class BlockAppService extends Service {
 											Tools.getDateStrNow(),
 											MainConfig.Interval_CheckTop, 0);
 									statisticsItems.add(item);
+									tmpItem = item;
 								}
-							}
-							
-							if (isTop && LocalSetting.getBoolean("yoblock_enable", true)
-									&& LocalSetting.getBoolean(appinfo.packageName, false))
-							{
-								Intent i = new Intent(BlockAppService.this, NotifyActivity.class);
-								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-								startActivity(i);
+								
+								if (LocalSetting.getBoolean("yoblock_enable", true)
+										&& LocalSetting.getBoolean(appinfo.packageName, false))
+								{
+									tmpItem.addBlockTimes();
+									Intent i = new Intent(BlockAppService.this, NotifyActivity.class);
+									i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+									startActivity(i);
+								}
 							}
 						}
 						sleep(MainConfig.Interval_CheckTop);
