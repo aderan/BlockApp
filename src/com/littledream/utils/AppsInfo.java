@@ -41,7 +41,7 @@ public class AppsInfo {
 				tmpInfo.versionCode = packageInfo.versionCode; 
 				tmpInfo.appIcon = packageInfo.applicationInfo.loadIcon(pm);
 				if ((packageInfo.applicationInfo.flags & packageInfo.applicationInfo.FLAG_SYSTEM) <= 0
-						&& !packageInfo.packageName.equals("com.littledream.blockapp")) {  
+						&& !packageInfo.packageName.equals(context.getPackageName())) {  
 					appList.add(tmpInfo);
 				}
 		}

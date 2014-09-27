@@ -66,8 +66,9 @@ public class BlockAppService extends Service {
 		final ArrayList<AppInfoItem> appList = AppsInfo.getInstance(this).getAppList();
 		
 		final SqliteHelper dbHelper = SqliteHelper.getInstance(this);
-		final List<StatisticsItem> statisticsItems =  dbHelper.getStatistics();
+		dbHelper.saveLastDayStatistics();
 		
+		final List<StatisticsItem> statisticsItems =  dbHelper.getStatistics();
 		mThread = new Thread(){
 			@Override
 			public void run() {

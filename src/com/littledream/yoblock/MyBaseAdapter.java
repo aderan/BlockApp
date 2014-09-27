@@ -9,6 +9,8 @@ import com.littledream.view.ImageTextButton;
 import com.littledream.yoblock.R;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 public class MyBaseAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<AppInfoItem> mAppsInfo;
+	private static final String LOGTAG = "MyBaseAdapter";
 	
 	public MyBaseAdapter(Context context,List<AppsInfo.AppInfoItem> appsInfo){
 		this.mAppsInfo = appsInfo;
@@ -107,9 +110,14 @@ public class MyBaseAdapter extends BaseAdapter {
 		convertView.setOnLongClickListener(new OnLongClickListener(){
 			@Override
 			public boolean onLongClick(View v) {
-				Toast.makeText(mContext, 
-						"[convertView.setOnLongClickListener]点击了"+appInfo.appName, 
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(mContext, 
+//						"[convertView.setOnLongClickListener]点击了"+appInfo.appName, 
+//						Toast.LENGTH_SHORT).show();
+				Log.d(LOGTAG , "长按进行软件删除");
+				//长按卸载软件：考虑的是已经很久没用的软件，有强迫症的朋友可以直接卸载软件
+				Uri packageURI = Uri.parse("package:"+appInfo.packageName);         
+				Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);         
+				mContext.startActivity(uninstallIntent); 
 				return true;
 			}
 		});

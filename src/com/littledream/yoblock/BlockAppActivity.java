@@ -3,10 +3,12 @@ package com.littledream.yoblock;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import com.littledream.utils.AppsInfo;
 import com.littledream.utils.AppsInfo.AppInfoItem;
 import com.littledream.utils.DebugHelper;
+import com.littledream.utils.SqliteHelper;
 import com.littledream.yoblock.R;
 
 import android.support.v7.app.ActionBarActivity;
@@ -30,12 +32,20 @@ public class BlockAppActivity extends ActionBarActivity {
 		AppsInfo appsinfo = AppsInfo.getInstance(this);
 		DebugHelper.showCostTime("step 1");
 		List applist = appsinfo.getAppList();
+		SqliteHelper dbHelper = SqliteHelper.getInstance(this);
+		final Map<String, Integer> map = dbHelper.loadLastDayStatistics();
 		Collections.sort(applist, new Comparator<AppInfoItem>(){
-
 			@Override
 			public int compare(AppInfoItem arg0, AppInfoItem arg1) {
 				// TODO Auto-generated method stub
-				return 0;
+				Integer i0 = map.get(arg0.packageName);
+				if (i0 == null)
+					i0 = new Integer(0);
+				Integer i1 = map.get(arg1.packageName);
+				if (i1 == null)
+					i1 = new Integer(0);
+				//默认升序排列，找了会未找到降序排列，暂且如此
+				return i1.compareTo(i0) ;
 			}
 			
 		});
