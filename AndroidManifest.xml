@@ -9,6 +9,7 @@
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> 
 
     <application
         android:name=".BlockAppApplication"
@@ -39,6 +40,15 @@
             android:label="@string/title_activity_setting"
             android:launchMode="singleTask">
        	</activity>
+       	
+       	<receiver android:name=".BootReceiver" >
+            <intent-filter>
+                <!-- 系统启动完成后会调用 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

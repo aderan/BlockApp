@@ -1,5 +1,6 @@
 package com.littledream.yoblock;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,8 +13,12 @@ import com.littledream.utils.SqliteHelper;
 import com.littledream.yoblock.R;
 
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
@@ -23,6 +28,8 @@ import android.widget.SimpleAdapter;
 public class BlockAppActivity extends ActionBarActivity {
 
 	private ListView mListView;
+	private MyBaseAdapter adapter;
+	private ArrayList<AppInfoItem> applist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +38,7 @@ public class BlockAppActivity extends ActionBarActivity {
 		DebugHelper.timerStart();
 		AppsInfo appsinfo = AppsInfo.getInstance(this);
 		DebugHelper.showCostTime("step 1");
-		List applist = appsinfo.getAppList();
+		applist = appsinfo.getAppList();
 		SqliteHelper dbHelper = SqliteHelper.getInstance(this);
 		final Map<String, Integer> map = dbHelper.loadLastDayStatistics();
 		Collections.sort(applist, new Comparator<AppInfoItem>(){
@@ -47,9 +54,10 @@ public class BlockAppActivity extends ActionBarActivity {
 				//默认升序排列，找了会未找到降序排列，暂且如此
 				return i1.compareTo(i0) ;
 			}
-			
+		
 		});
-		BaseAdapter adapter = new MyBaseAdapter(this, applist);
+		
+		adapter = new MyBaseAdapter(this, applist);
 		DebugHelper.showCostTime("step 2");
 		mListView = new ListView(this);
 		mListView.setAdapter(adapter);
@@ -60,7 +68,27 @@ public class BlockAppActivity extends ActionBarActivity {
 		Intent intent = new Intent(this,BlockAppService.class);  
 		startService(intent);
 	}
-
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		Log.d("Aderan", "requestCode:"+requestCode+" resultCode:"+resultCode);
+		if (resultCode ==  0)
+		{
+			int position = requestCode - MyBaseAdapter.REQUEST_UNINSTALL_BASE;
+            try {
+            	AppsInfo.AppInfoItem app = adapter.getItem(position);
+            	Log.d("Aderan","确认是否删除："+app.packageName);
+            	ApplicationInfo packageInfo = getPackageManager().getApplicationInfo(app.packageName, 0);
+            }
+            catch (PackageManager.NameNotFoundException e) {
+                Log.d("Aderan",  "NameNotFound：移除相应项");          
+                applist.remove(position);
+                adapter.notifyDataSetChanged();
+            }
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

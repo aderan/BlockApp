@@ -8,6 +8,7 @@ import com.littledream.utils.LocalSetting;
 import com.littledream.view.ImageTextButton;
 import com.littledream.yoblock.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +32,7 @@ public class MyBaseAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<AppInfoItem> mAppsInfo;
 	private static final String LOGTAG = "MyBaseAdapter";
+	public static final int REQUEST_UNINSTALL_BASE = 100;
 	
 	public MyBaseAdapter(Context context,List<AppsInfo.AppInfoItem> appsInfo){
 		this.mAppsInfo = appsInfo;
@@ -47,6 +49,14 @@ public class MyBaseAdapter extends BaseAdapter {
 		return mAppsInfo.get(position);
 	}
 
+//	public AppsInfo.AppInfoItem removeItem(int position) {
+//		return mAppsInfo.remove(position);
+//	}
+//	
+//	public boolean addItem(AppsInfo.AppInfoItem item) {
+//		return mAppsInfo.add(item);
+//	}
+
 	@Override
 	public long getItemId(int position) {
 		return position;
@@ -60,7 +70,7 @@ public class MyBaseAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		final AppInfoItem appInfo = (AppInfoItem)getItem(position);
 		ViewHolder viewHolder = null;
 		if(convertView==null){
@@ -117,7 +127,7 @@ public class MyBaseAdapter extends BaseAdapter {
 				//长按卸载软件：考虑的是已经很久没用的软件，有强迫症的朋友可以直接卸载软件
 				Uri packageURI = Uri.parse("package:"+appInfo.packageName);         
 				Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);         
-				mContext.startActivity(uninstallIntent); 
+				((Activity)mContext).startActivityForResult(uninstallIntent,REQUEST_UNINSTALL_BASE+position);
 				return true;
 			}
 		});
