@@ -4,7 +4,10 @@
     <string name="app_name">幽禁</string>
     <string name="keep_mind">你是否还记得，你曾经的承诺</string>
     <string name="action_settings">设置</string>
+    <string name="action_about">关于</string>
     <string name="title_activity_notify">提醒</string>
+    <string name="title_activity_about">关于</string>
+    <string name="title_activity_statistics">时间统计</string>
     <string name="title_activity_setting">设置</string>
 
 </resources>

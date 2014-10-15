@@ -115,6 +115,24 @@ public class SqliteHelper extends SQLiteOpenHelper{
 		return list;
 	}
 	
+	//当前简单统计下时间,之后可能的话可以统计更多有需要的数据，
+	public StatisticsUseTime getStatisticsUseTime(String packageName)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		StatisticsUseTime useTime = new StatisticsUseTime();
+		
+		Cursor cursor = db.rawQuery
+				(" select sum(UseTime) as sumOfTime,avg(UseTime) as avgOfTime from statistics where packageName=?", new String[]{packageName});
+	
+		if (cursor.moveToFirst())
+		{
+			useTime.allUseTime =cursor.getInt(cursor.getColumnIndex("sumOfTime"));
+			useTime.useTimeAverage =cursor.getInt(cursor.getColumnIndex("avgOfTime"));
+		}
+		cursor.close();
+		return useTime;
+	}
+	
 	private final static String STATISTICS_FILENAME = "lastdayStatistics";
 	//TODO:做排序，出于Acitvity加载数据的问题，将排序信息存储在文件，
 	public void saveLastDayStatistics()

@@ -59,5 +59,6 @@ public class StatisticsItem {
 				+ ", useTime=" + useTime + ", blockTimes=" + blockTimes
 				+ ", hashKey=" + hashKey + "]";
 	}
-	
 }
+
+

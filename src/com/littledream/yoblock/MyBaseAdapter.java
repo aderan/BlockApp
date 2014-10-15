@@ -5,6 +5,8 @@ import java.util.List;
 import com.littledream.utils.AppsInfo;
 import com.littledream.utils.AppsInfo.AppInfoItem;
 import com.littledream.utils.LocalSetting;
+import com.littledream.utils.SqliteHelper;
+import com.littledream.utils.StatisticsUseTime;
 import com.littledream.view.ImageTextButton;
 import com.littledream.yoblock.R;
 
@@ -12,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -102,19 +105,22 @@ public class MyBaseAdapter extends BaseAdapter {
 		
 		viewHolder.choose.setChecked(LocalSetting.getBoolean(appInfo.packageName, false));
 		
-//		//对ListView中button配置OnClick事件
-//		viewHolder.choose.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-////				Toast.makeText(mContext, 
-////						"点击了"+appInfo.appName, 
-////						Toast.LENGTH_SHORT).show();
-//				//ShowChangeOnClick
-//				CheckBox cbox = (CheckBox)v;
-//				cbox.setChecked(!cbox.isChecked());
-//				LocalSetting.setBoolean(appInfo.packageName, cbox.isChecked());
-//			}
-//		});
+		//对ListView中button配置OnClick事件
+		convertView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+//				Toast.makeText(mContext, 
+//						"点击了"+appInfo.appName, 
+//						Toast.LENGTH_SHORT).show();
+				//ShowChangeOnClick
+				SqliteHelper dbHelper = SqliteHelper.getInstance(mContext);
+				StatisticsUseTime useTime = dbHelper.getStatisticsUseTime(appInfo.packageName);
+				Intent i = new Intent(mContext, StatisticsActivity.class);
+				i.putExtra("useTime", useTime);
+				i.putExtra("appName", appInfo.appName);
+				mContext.startActivity(i);
+			}
+		});
 		
 		//对ListView中的每一行信息配置OnLongClick事件
 		convertView.setOnLongClickListener(new OnLongClickListener(){
